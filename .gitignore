@@ -1,3 +1,10 @@
 *.log
 *.pyc
 *.swp
+build/
+*.c
+*.so
+*.tsv
+*.out
+
+!randomkit.*

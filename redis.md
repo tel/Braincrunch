@@ -1,10 +1,6 @@
-
 # Redis Index
 
 ## Log
-
-* Index started on Sat Mar 31 6p
-  7400 images to process
 
 ## Slices
 
@@ -17,21 +13,32 @@ prefixes.
 * `Slices:prefixes` is a list of slice prefixes, stored in z-order. Note that
   Redis is 0-based, but so are stack coordinates.
 
-## Processes
+## Objects
 
-* `Processes.count` counts the number of processes observed
-* `Procseses:<id>` is the prefix for a particlar process
-  * `:xc:<z>` is the x-center in the z-th plane
-  * `:yc:<z>` is the y-center in the z-th plane
-  * `:r` is the red color index
-  * `:g` is the green color index
-  * `:b` is the blue color index
-  * `:xmin` is the minimim x value observed
-  * `:xmax` is the maximum x value observed
-  * `:ymin`, `:ymax`, `:zmin`, `:zmax`
+Any slice consists of a large number of objects, each with a different id and
+color. This information is mostly just a copy of the information from
+fullressegJV.txt but available for live editing and extension.
+
+* `Objects.interesting` A list of "interesting" objects
+* `Objects.bounded` A list of objects with known boundaries
+* `Objects:<id>` prefix for a particular object
+  * `:name` object name
+  * `:x/y/zseed` x/y/z coordinate of a single pixel known to be in this object set
+  * `:r`, `:g`, `:b` is the unique color code of this object
+  * `:x/y/zmin` minimum observed x/y/z location
+  * `:x/y/zmax` maximum observed x/y/z location
+  * `:x/y/zrange` x/y/z/-linear size of bounding box
+  * `:bounded` boolean for whether the boundary footprint has positive volume
+  * `:log10footprint2` log10(xrange*yrange) (exists iff :bounded)
+  * `:log10footprint` log10(xrange*yrange*zrange) (exists iff :bounded)
+  * `:centered` boolean for whether this object has slice centroids (not
+    relevant for, say, the background object)
+  * `:<z>` slice specific observations prefix
+	* `:xc`, `:yc` x and y centroid position (can't guarantee this to be in an
+	   object's set/extent)
 
 ## Colors 
 
-Colors are the reverse process index, pixel color to process id
+Colors are the reverse object index, pixel color to object id
 
-* `Colors:<r>:<g>:<b>:process` is the process id for the color (`r`, `g`, `b`)
+* `Colors:<r>:<g>:<b>:object` is the object id for the color (`r`, `g`, `b`)
